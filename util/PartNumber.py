@@ -56,6 +56,10 @@ def PartNumber( input ):
         ssid = '0xAF07'
     if partNumber == '02204':
         ssid = '0xAF08'
+    if partNumber == '02289':
+        ssid = '2x2'
+    if partNumber == '02288':
+        ssid = '4x4'
 
         
     print "ubiquiti_id = %s" % ubiquiti_id
@@ -123,5 +127,18 @@ if __name__ == '__main__':
     else:
         print "invalid %s" % input
         
+    input = '113-02289-02'
+    valid, pn, hrev, ssid, ccode = PartNumber( input )
+    if valid:
+        print "valid %s  %s  %s  %s" % (pn,hrev,ssid,ccode)
+    else:
+        print "invalid %s" % input
+
+    input = '113-02288-02'
+    valid, pn, hrev, ssid, ccode = PartNumber( input )
+    if valid:
+        print "valid %s  %s  %s  %s" % (pn,hrev,ssid,ccode)
+    else:
+        print "invalid %s" % input
        
         

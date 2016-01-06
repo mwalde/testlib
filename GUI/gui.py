@@ -13,7 +13,7 @@ from testlib.util.PartNumber import PartNumber
 
 class   GUI( Tk ):
 
-    def __init__( self, title, odo_name, icon = None ):
+    def __init__( self, title, odo_name = 'GUItest', icon = None ):
         Tk.__init__(self)
     #    tkroot.geometry("1000x500+450+350")
         s = Style()
@@ -26,7 +26,7 @@ class   GUI( Tk ):
         self.option_add("*Label.Font", "Helvetica 12 bold")
 
         self.title(title)
-        self.tk.call('wm', 'iconbitmap', self._w, '-default', 'c:\Windows\System32\PerfCenterCpl.ico')
+        self.tk.call('wm', 'iconbitmap', self._w, '-default', 'c:/airfiber/airview.ico')
 
         # init the test  ConfigFrame
         self.cfgframe = ConfigFrame(self, title, odo_name  )
@@ -208,7 +208,7 @@ class   GUI( Tk ):
     
     
 if __name__== '__main__':
-    eq = Equip()
+#    eq = Equip()
     gui = GUI("airFiber 5GHz Test Station")
     gui.elapsedTime(0)
     opid = gui.EnterOperatorID()

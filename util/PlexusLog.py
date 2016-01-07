@@ -139,26 +139,32 @@ class PlexusLog(SafeConfigParser):
 #            print e
             # this should catch all RF Out Of Range messages
             if self.isFloat(e[0]):  # log range limits tests, anything starting with a frequency
-                self.TestDesignator = e[0]+e[1]+e[2]+e[3]+e[4]  # test discription
-                self.TestData = e[6]    # test data
-                self.TestLowLimit = e[15]   # test low limit
-                self.TestHiLimit = e[13]    # test high limit
-                # units of measurement
-                self.TestUnits = self.units_of_measurement[e[4]]
-                return
+                try:
+                    self.TestDesignator = e[0]+e[1]+e[2]+e[3]+e[4]  # test discription
+                    self.TestData = e[6]    # test data
+                    self.TestLowLimit = e[15]   # test low limit
+                    self.TestHiLimit = e[13]    # test high limit
+                    # units of measurement
+                    self.TestUnits = self.units_of_measurement[e[4]]
+                    return
+                except:
+                    return
                 
 #            if e[0] == 'Capacity_Error:':
 #                self.TestDesignator = e[2]+e[1]+e[3]+e[4]
 #            if e[0] == 'Calibration' of e[0] == 'Calibration_Error:' or e[0] == 'BoardLimits' or e[0] == 'Exception:':
             # INITIAL and FINAL Test Out Of Range messages
             if '+++OUT OF RANGE+++' in line:
-                self.TestDesignator = e[3]  # test discription
-                self.TestData = e[5]    # test data
-                self.TestLowLimit = e[14]   # test low limit
-                self.TestHiLimit = e[12]    # test high limit
-                # units of measurement
-                self.TestUnits = self.units_of_measurement[e[3]]
-                return
+                try:
+                    self.TestDesignator = e[3]  # test discription
+                    self.TestData = e[5]    # test data
+                    self.TestLowLimit = e[14]   # test low limit
+                    self.TestHiLimit = e[12]    # test high limit
+                    # units of measurement
+                    self.TestUnits = self.units_of_measurement[e[3]]
+                    return
+                except:
+                    return
 
 
             for substr in ['Calibration','Capacity','BoardLimits','Exception','FinalLimits']: # log these messages
@@ -172,6 +178,17 @@ class PlexusLog(SafeConfigParser):
                     line = line.replace(' ','')
                     self.TestDesignator = line[:40] if len(line) > 40 else line
                     break
+            
+            try:
+                self.TestDesignator = e[0]+e[2]+e[3]+e[4]
+                self.TestData = e[1]
+                if e[3] == 'lo':
+                    self.TestLowLimit = e[5]
+                else:
+                    self.TestHiLimit = e[5]
+                self.TestUnits = 'db'
+            except:
+                return
                 
 #====================================================================
 #                 Main entry point
@@ -208,7 +225,9 @@ xxerr_str = \
 '5.720 ch 0  TXCAL power == None +++OUT OF RANGE+++ : Range High 17.5  Low 16.5\n' + \
 '5.720 ch 0  TXCAL evm == None +++OUT OF RANGE+++ : Range High -37.00000  Low -45.00000\n' + \
 'Calibration_Error: TxData Error: TX0 6200MHz No Power (could not convert string to float: )\n' + \
-'Calibration Error: TX0 5720MHz Low Power (IMM) MAC=24:a4:3c:38:4d:1c\n'
+'Calibration Error: TX0 5720MHz Low Power (IMM) MAC=24:a4:3c:38:4d:1c\n' + \
+'24.100 TX1  TX DataEvm == -30.6295045765 +++OUT OF RANGE+++ : Range High -33  Low -38\n' + \
+'24.200 TX1  TX DataEvm == -30.6927264322 +++OUT OF RANGE+++ : Range High -33  Low -38\n'
 
 xerr_str = \
 'BoardLimits test BOARD OverCurrent == FAIL\n' + \
@@ -253,7 +272,11 @@ xerr_str = \
 'FinalLimits test FINAL RxCapacity == 400000001 +++OUT OF RANGE+++ : Range High 400000000  Low  380000000\n' + \
 'FinalLimits test FINAL TxCapacity == 400000001 +++OUT OF RANGE+++ : Range High 400000000  Low  380000000\n'
 
-err_str = xxerr_str + xerr_str
+xxxerr_str ='LB0J1_5150: -1.42961632511 exceeds lo limit 4.0\n' + \
+'LB0J1_5550: 3.48667021631 exceeds lo limit 4.0\n' + \
+'LB0J1_5950: 7.21399121373 exceeds hi limit 6.0\n'
+
+err_str = xxerr_str + xerr_str + xxxerr_str
 
 if __name__ == '__main__':
     print err_str
